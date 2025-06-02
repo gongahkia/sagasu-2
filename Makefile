@@ -4,6 +4,7 @@ config:
 	@echo "Installing configuration..."
 	@pip install -r requirements.txt
 	@playwright install
+	@playwright install chromium
 
 start:
-	python3 -m bot.bot
+	python3 -m src.bot

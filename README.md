@@ -25,7 +25,15 @@
 
 The below instructions are for locally running `Sagasu 2`. Note the most direct way to use `Sagasu 2` would be to [**use the Telegram Bot/Web App**](#sagasu-2).
 
-1. Create a `.env` file with the following details at `./src/`.
+1. First run the below.
+
+```console
+$ python3 -m venv myenv
+$ source myenv/bin/activate
+$ make
+```
+
+2. Then create a `.env` file with the following details at `./src/`.
 
 ```env
 TELEGRAM_BOT_TOKEN=XXX
@@ -33,13 +41,11 @@ SMU_FBS_USERNAME=XXX
 SMU_FBS_PASSWORD=XXX
 ```
 
-...
-
-```console
-
-```
+3. Then run `make start`.
 
 ## Architecture
+
+...
 
 ## Other notes
 
