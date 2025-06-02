@@ -1,0 +1,6 @@
+playwright
+dotenv
+python-dateutil
+pre-commit
+python-telegram-bot
+fastapi
