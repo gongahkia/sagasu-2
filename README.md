@@ -3,7 +3,7 @@
 # `Sagasu 2`
 
 <p align="center">
-    <img src="./asset/logo/sagasu-2.png" width=50% height=50%>
+    <img src="./asset/logo/sagasu-2.png" width=65% height=65%>
 </p>
 
 ...
