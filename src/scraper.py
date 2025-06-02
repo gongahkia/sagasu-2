@@ -2,13 +2,12 @@
 
 import os
 import json
+import helper
 import itertools
 from dotenv import load_dotenv
 from dateutil.parser import parse
 from datetime import datetime, timedelta
 from playwright.sync_api import sync_playwright
-
-import helper
 
 # ---- CONSTANTS ----
 

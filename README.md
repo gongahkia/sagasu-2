@@ -6,17 +6,24 @@
     <img src="./asset/logo/sagasu-2.png" width=65% height=65%>
 </p>
 
-...
+`Sagasu 2` exists in the following forms.
+
+1. ***Live Telegram Bot*** [@sagasu2_bot](https://t.me/sagasu2_bot)
+2. ***Live Web App*** at [sagasu-two.vercel.app](https://sagasu-two.vercel.app/)
 
 ## Stack
 
-...
+* *Frontend*: [Telegram Bot API](https://core.telegram.org/), [React](https://react.dev/), [Next.js](https://nextjs.org/)
+* *Backend*: [Python](https://www.python.org/)
+* *Encryption*: ...
 
 ## Rationale
 
 ...
 
 ## Usage
+
+The below instructions are for locally ...
 
 ```env
 
