@@ -3,7 +3,7 @@
 # `Sagasu 2`
 
 <p align="center">
-    <img src="./asset/logo/sagasu-2.png" width=70% height=70%>
+    <img src="./asset/logo/sagasu-2.png" width=55% height=55%>
 </p>
 
 `Sagasu 2` exists in the following forms.
