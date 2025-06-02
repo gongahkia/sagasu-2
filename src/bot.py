@@ -96,8 +96,8 @@ async def settings_email(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def settings_password(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Store password and complete setup"""
     context.user_data["password"] = update.message.text
-    os.environ["USERNAME"] = context.user_data["email"]
-    os.environ["PASSWORD"] = context.user_data["password"]
+    os.environ["SMU_FBS_USERNAME"] = context.user_data["email"]
+    os.environ["SMU_FBS_PASSWORD"] = context.user_data["password"]
     await update.message.reply_text("✅ Credentials updated successfully!")
     return ConversationHandler.END
 
