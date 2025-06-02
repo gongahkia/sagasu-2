@@ -38,3 +38,12 @@ def format_date(date_input):
         return date_obj.strftime("%d-%b-%Y")
     except ValueError:
         return "Invalid date format"
+
+def split_message(text: str, max_length: int = 4096) -> list:
+    """Split long messages for Telegram"""
+    return [text[i:i+max_length] for i in range(0, len(text), max_length)]
+
+async def send_large_message(context, chat_id, text):
+    """Handle Telegram's message length limits"""
+    for part in split_message(text):
+        await context.bot.send_message(chat_id=chat_id, text=part)

@@ -35,6 +35,8 @@ The below instructions are for locally ...
 
 ```
 
+## Architecture
+
 ## Other notes
 
 [`Sagasu-2`](https://github.com/gongahkia/sagasu-2) stands on the shoulders of [`Sagasu`](https://github.com/gongahkia/sagasu).
