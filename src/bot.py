@@ -118,7 +118,8 @@ def main():
             SETTING_EMAIL: [MessageHandler(filters.TEXT & ~filters.COMMAND, settings_email)],
             SETTING_PASSWORD: [MessageHandler(filters.TEXT & ~filters.COMMAND, settings_password)]
         },
-        fallbacks=[CommandHandler("cancel", cancel)]
+        fallbacks=[CommandHandler("cancel", cancel)],
+        per_message=True  
     )
     app.add_handler(CommandHandler("start", start))
     app.add_handler(conv_handler)
