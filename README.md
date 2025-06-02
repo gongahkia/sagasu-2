@@ -45,6 +45,12 @@ SMU_FBS_PASSWORD=XXX
 
 ## Architecture
 
+### [Telegram Bot](./src)
+
+...
+
+### [Web App](./sagasu2-app)
+
 ...
 
 ## Other notes

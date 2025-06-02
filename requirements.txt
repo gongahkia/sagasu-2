@@ -1,6 +1,6 @@
-playwright
-dotenv
-python-dateutil
-pre-commit
-python-telegram-bot
-fastapi
+playwright==1.45.0
+python-dotenv==1.0.1
+python-dateutil==2.9.0.post0
+pre-commit==3.7.0
+python-telegram-bot[ext]==21.0.1
+fastapi==0.111.0

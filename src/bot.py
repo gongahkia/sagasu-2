@@ -5,7 +5,6 @@ import json
 import asyncio
 from datetime import datetime
 from dotenv import load_dotenv
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
@@ -13,7 +12,10 @@ from telegram.ext import (
     ContextTypes,
     ConversationHandler,
     MessageHandler,
-    filters
+    filters,
+    Update,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup
 )
 
 import helper
