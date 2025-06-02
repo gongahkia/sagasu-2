@@ -7,4 +7,5 @@ config:
 	@playwright install chromium
 
 start:
-	python3 -m src.bot
+	@echo "Starting bot..."
+	@python3 src/bot.py

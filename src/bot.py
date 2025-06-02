@@ -17,12 +17,14 @@ from telegram.ext import (
 )
 
 import helper
+from helper import (
+   format_date, 
+)
 from scraper import (
     scrape_smu_fbs,
     VALID_BUILDING,
     VALID_FLOOR,
     VALID_FACILITY_TYPE,
-    format_date,
     convert_room_capacity
 )
 
