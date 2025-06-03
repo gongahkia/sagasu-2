@@ -48,8 +48,8 @@ def format_date(date_input: str) -> str:
 def read_credentials() -> Optional[dict]:
     """Read credentials from a .env file"""
     load_dotenv()
-    username = os.getenv("USERNAME")
-    password = os.getenv("PASSWORD")
+    username = os.getenv("SMU_FBS_USERNAME")
+    password = os.getenv("SMU_FBS_PASSWORD")
     if not username or not password:
         print("Missing USERNAME or PASSWORD in .env file.")
         return None

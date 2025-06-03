@@ -131,7 +131,16 @@ def scrape_smu_fbs(base_url="https://fbs.intranet.smu.edu.sg/home", building_arr
     room_capacity_formatted = convert_room_capacity(7)
     try:
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=False, slow_mo=1000)
+            # browser = p.chromium.launch(headless=False, slow_mo=1000)
+            browser = p.chromium.launch(
+                headless=False,
+                slow_mo=1000,
+                args=[
+                    '--no-sandbox',
+                    '--disable-gpu',
+                    '--disable-dev-shm-usage'
+                ]
+            )
             page = browser.new_page()
             try:
                 page.goto(base_url)
