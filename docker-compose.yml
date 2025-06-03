@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:alpine
+
+  core:
+    build: .
+    command: celery -A core.scraper_service worker --loglevel=info
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+
+  telegram-bot:
+    build: ./telegram_bot
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - core
+      - redis
+
+  web-backend:
+    build: ./web/backend
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - core
+      - redis
+
+  web-frontend:
+    build: ./web/frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - web-backend

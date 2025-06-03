@@ -21,6 +21,7 @@
 
 * *Frontend*: [Telegram Bot API](https://core.telegram.org/)
 * *Backend*: [Python](https://www.python.org/)
+* *Cache*: [Redis](https://redis.io/)
 * *Encryption*: ...
 * ...
 
@@ -28,6 +29,7 @@
 
 * *Frontend*: [React](https://react.dev/), [Next.js](https://nextjs.org/)
 * *Backend*: [Python](https://www.python.org/), [FastAPI](https://fastapi.tiangolo.com/)
+* *Cache*: [Redis](https://redis.io/)
 * *Encryption*: ...
 * ...
 
@@ -59,9 +61,17 @@ $ make
 TELEGRAM_BOT_TOKEN=XXX
 SMU_FBS_USERNAME=XXX
 SMU_FBS_PASSWORD=XXX
+REDIS_URL=redis://localhost:6379/0
 ```
 
-3. Then run `make start`.
+3. Then run the below.
+
+```console
+docker-compose up redis core
+docker-compose up telegram-bot
+docker-compose up web-backend
+cd web/frontend && npm start
+```
 
 ## Other notes
 
