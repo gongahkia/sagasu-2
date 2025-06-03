@@ -1,5 +1,6 @@
 [![](https://img.shields.io/badge/sagasu_2.0.0-passing-green)](https://github.com/gongahkia/sagasu-2/releases/tag/1.0.0)
 ![](https://img.shields.io/badge/sagasu_2.0.0-deployment_down-orange) 
+![Vercel Deploy](https://deploy-badge.vercel.app/vercel/sagasu-two)
 
 > [!WARNING]  
 > [`Sagasu 2`](https://github.com/gongahkia/sagasu-2/tree/main?tab=readme-ov-file)'s Vercel, Heroku and AWS EC2 deployments are inactive as of 3 June 2025 due to a **bug** involving Microsoft Account Redirect Loops that break the scraper.
