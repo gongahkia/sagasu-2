@@ -16,7 +16,7 @@ from telegram.ext import (
     filters
 )
 
-from core import helper
+from telegram_helpers import send_large_message, cancel
 from core.scraper_service import scrape_task  
 from core.models import UserCredentials  
 
