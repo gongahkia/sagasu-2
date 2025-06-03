@@ -2,17 +2,17 @@
 ![](https://img.shields.io/badge/sagasu_2.0.0-deployment_down-orange) 
 
 > [!WARNING]  
-> [`Sagasu 2`](https://github.com/gongahkia/sagasu-2/tree/main?tab=readme-ov-file)'s Vercel, Heroku and AWS EC2 deployments are inactive as of 3 June 2025 due to a bug involving Microsoft Account Redirect Loops that break the scraper.
+> [`Sagasu 2`](https://github.com/gongahkia/sagasu-2/tree/main?tab=readme-ov-file)'s Vercel, Heroku and AWS EC2 deployments are inactive as of 3 June 2025 due to a **bug** involving Microsoft Account Redirect Loops that break the scraper.
 >  
 > The issue is further documented here.
 >  
-> * [*Microsoft account redirect loop during login prevents logging in.*](https://answers.microsoft.com/en-us/msoffice/forum/all/microsoft-account-redirect-loop-during-login/834042d5-e1d4-42c8-914d-9a8299226f98)
 > * [*Login redirect goes into a loop*](https://community.auth0.com/t/login-redirect-goes-into-a-loop/111254)
 > * [*Redirect loop when logging into the Portal*](https://www.reddit.com/r/AZURE/comments/1czbo5z/redirect_loop_when_logging_into_the_portal/)
 > * [*Login redirect loop when page url is different than the redirect url #2050*](https://github.com/AzureAD/microsoft-authentication-library-for-js/issues/2050)
 > * [*Difficulty getting data from web page with login authentication*](https://community.fabric.microsoft.com/t5/Desktop/Difficulty-getting-data-from-web-page-with-login-authentication/td-p/1915017)
 > * [*Infinite login loop in MS 365 and Office apps on Win 11 machine*](https://www.reddit.com/r/microsoft365/comments/1eajepp/infinite_login_loop_in_ms_365_and_office_apps_on/)
 > * [*Stuck in an infinite loop of needing to already be signed in to the Authenticator app to approve a sign in FOR the authenticator app.*](https://answers.microsoft.com/en-us/msteams/forum/all/stuck-in-an-infinite-loop-of-needing-to-already-be/ad37ec67-5a04-4e83-acc2-a3c9b8a9817b)
+> * [*Microsoft account redirect loop during login prevents logging in.*](https://answers.microsoft.com/en-us/msoffice/forum/all/microsoft-account-redirect-loop-during-login/834042d5-e1d4-42c8-914d-9a8299226f98)
 
 # `Sagasu 2`
 
