@@ -28,13 +28,9 @@
 
 ## Architecture
 
-### [Telegram Bot](./telegram_bot/)
+Below diagram shows the [Telegram Bot](./telegram_bot/), [Web App](./web/frontend/) and [FastAPI Server](./web/backend/).
 
-...
-
-### [Web App](./web/)
-
-...
+![](./asset/reference/architecture.png)
 
 ## Usage
 
