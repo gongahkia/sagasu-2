@@ -30,8 +30,8 @@
 * *Frontend*: [React](https://react.dev/), [Next.js](https://nextjs.org/)
 * *Backend*: [Python](https://www.python.org/), [FastAPI](https://fastapi.tiangolo.com/)
 * *Cache*: [Redis](https://redis.io/)
+* *Package*: [Docker](https://www.docker.com/)
 * *Encryption*: ...
-* ...
 
 ## Architecture
 
