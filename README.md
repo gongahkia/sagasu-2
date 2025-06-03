@@ -1,4 +1,10 @@
-![](https://img.shields.io/badge/sagasu_2.0.0-passing-green) 
+[![](https://img.shields.io/badge/sagasu_2.0.0-passing-green)]()
+![](https://img.shields.io/badge/sagasu_2.0.0-deployment_down-orange) 
+
+> [!WARNING]  
+> [`Sagasu 2`]()'s Vercel, Heroku and AWS EC2 deployments are inactive as of 3 June 2025.
+
+> ... FUA to edit this since no longer served live, also deprecate telegram bot due to authentication issues, state as a linked issue in a !WARNING above due to microsoft authentication redirect and add []()
 
 # `Sagasu 2`
 
@@ -7,8 +13,6 @@
 </p>
 
 `Sagasu 2` is served in the following forms through a unified [FastAPI](https://fastapi.tiangolo.com/) interface.
-
-> ... FUA to edit this since no longer served live, also deprecate telegram bot due to authentication issues, state as a linked issue in a !WARNING above due to microsoft authentication redirect and add []()
 
 1. ***Live Telegram Bot*** [@sagasu2_bot](https://t.me/sagasu2_bot)
 2. ***Live Web App*** at [sagasu-two.vercel.app](https://sagasu-two.vercel.app/)
@@ -23,12 +27,12 @@ However, the bloated UI and overly convaluted journey users must navigate throug
 
 ## Stack
 
-* *Frontend*: [Telegram Bot API](https://core.telegram.org/), [React](https://react.dev/), [Next.js](https://nextjs.org/)
-* *Backend*: [Python](https://www.python.org/), [FastAPI](https://fastapi.tiangolo.com/)
+* *Frontend*: [Telegram Bot API](https://core.telegram.org/), [React](https://react.dev/), [Next.js](https://nextjs.org/), [Vercel](https://vercel.com/)
+* *Backend*: [Python](https://www.python.org/), [FastAPI](https://fastapi.tiangolo.com/), [Heroku](https://www.heroku.com/), [AWS EC2](https://aws.amazon.com/ec2/)
 * *Cache*: [Redis](https://redis.io/)
 * *Package*: [Docker](https://www.docker.com/)
-* *Encryption*: ...
-* ...
+* *Scraper*: [Playwright](https://github.com/microsoft/playwright)
+* *Distributed Task Scheduling*: [Celery](https://docs.celeryq.dev/en/stable/)
 
 ## Architecture
 
@@ -38,7 +42,9 @@ Note the below diagram shows the [Telegram Bot](./telegram_bot/), [Web App](./we
 
 ## Usage
 
-The below instructions are for locally running `Sagasu 2`. Note the most direct way to use `Sagasu 2` would be to [**use the Telegram Bot/Web App**](#sagasu-2).
+Note the most direct way to use `Sagasu 2` would be to [**use the Telegram Bot/Web App**](#sagasu-2).
+
+The below instructions are for locally running `Sagasu 2`. 
 
 1. First run the below.
 
