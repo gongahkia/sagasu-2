@@ -62,10 +62,10 @@ ENV=development
 3. Then run the below.
 
 ```console
-docker-compose up redis core
-docker-compose up telegram-bot
-docker-compose up web-backend
-cd web/frontend && npm start
+$ docker-compose up redis core
+$ docker-compose up telegram-bot
+$ docker-compose up web-backend
+$ cd web/frontend && npm start
 ```
 
 ## Other notes
