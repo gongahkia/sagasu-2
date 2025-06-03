@@ -34,25 +34,17 @@ def unified_architecture():
             celery = Celery("Celery Workers")
             playwright = Custom("Playwright", PLAYWRIGHT_LOGO)
             shared_redis = Redis("Shared Session\nStorage")
-
-        # User to Hosting Providers
         mobile_user >> Edge(label="/start command") >> heroku
         web_user >> Edge(label="HTTP Request") >> vercel
-
-        # Hosting Providers to Services
         heroku >> Edge(label="Routes to") >> bot
         vercel >> Edge(label="Serves static assets") >> nginx
         aws_ec2 >> Edge(label="Hosts") >> api
         aws_ec2 >> Edge(label="Hosts") >> celery
         aws_ec2 >> Edge(label="Hosts") >> playwright
         aws_ec2 >> Edge(label="Hosts") >> shared_redis
-
-        # React frontend flow
         nginx >> Edge(label="Loads") >> react
         react >> Edge(label="API calls") >> api
         api >> Edge(label="SSE/WebSocket") >> react
-
-        # Telegram bot flow
         bot >> Edge(label="Store/fetch") >> telegram_redis
         bot >> Edge(label="Trigger task") >> celery
         celery >> Edge(label="Execute scrape") >> playwright
@@ -60,8 +52,6 @@ def unified_architecture():
         playwright >> Edge(label="Write results") >> shared_redis
         shared_redis >> Edge(label="Poll status") >> bot
         bot >> Edge(label="Send results") >> mobile_user
-
-        # Backend API task queue and polling
         api >> Edge(label="Queue task") >> celery
         shared_redis >> Edge(label="Poll status") >> api
 
