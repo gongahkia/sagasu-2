@@ -3,8 +3,3 @@ python-dotenv==1.0.1
 python-dateutil==2.9.0.post0
 pre-commit==3.7.0
 python-telegram-bot[ext]==21.0.1
-fastapi==0.111.0
-uvicorn>=0.15.0
-celery>=5.2.0
-redis
-# diagrams

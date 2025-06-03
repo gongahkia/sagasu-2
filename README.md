@@ -55,7 +55,7 @@ $ source myenv/bin/activate
 $ make
 ```
 
-2. Then create a `.env` file with the following details at `./src/`.
+2. Then create a `.env` file with the following details at `./`.
 
 ```env
 TELEGRAM_BOT_TOKEN=XXX
