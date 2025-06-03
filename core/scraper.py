@@ -117,16 +117,15 @@ def split_bookings_by_day(bookings):
                 current_day.append(booking)
     return days
 
-def scrape_smu_fbs(base_url="https://fbs.intranet.smu.edu.sg/home", building_array=[], floor_array=[], facility_type_array=[], equipment_array=[]):
+def scrape_smu_fbs(base_url="https://fbs.intranet.smu.edu.sg/home", building_array=[], floor_array=[], facility_type_array=[], equipment_array=[], date_raw="", duration_hrs=2, start_time="00:00"):
     """Main Scraper Function to automate login and scrape SMU FBS booked timeslots for filtered rooms"""
     errors = []
     credentials = helper.read_credentials()
     if not credentials:
         return ["Missing credentials."]
-    date_raw = "23 december 2024"
+    if not date_raw:
+        return ["Missing date."]
     date_formatted = helper.format_date(date_raw)
-    duration_hrs = 2.5
-    start_time = "14:00"
     end_time = calculate_end_time(VALID_TIME, start_time, duration_hrs)[0]
     room_capacity_formatted = convert_room_capacity(7)
     try:
@@ -291,4 +290,7 @@ if __name__ == "__main__":
     FLOOR_ARRAY = ["Level 1", "Level 2"]
     FACILITY_TYPE_ARRAY = ["Classroom"]
     EQUIPMENT_ARRAY = ["Classroom PC"]
-    print(f"errors: {scrape_smu_fbs(TARGET_URL, BUILDING_ARRAY, FLOOR_ARRAY, FACILITY_TYPE_ARRAY, EQUIPMENT_ARRAY)}")
+    DATE_RAW="23 december 2024"
+    DURATION_HRS = 2.5
+    START_TIME = "14:00"
+    print(f"errors: {scrape_smu_fbs(TARGET_URL, BUILDING_ARRAY, FLOOR_ARRAY, FACILITY_TYPE_ARRAY, EQUIPMENT_ARRAY, DATE_RAW, DURATION_HRS, START_TIME)}")
