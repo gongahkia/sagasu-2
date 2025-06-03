@@ -6,7 +6,9 @@
     <img src="./asset/logo/sagasu-2.png" width=55% height=55%>
 </p>
 
-`Sagasu 2` exists in the following forms through a unified [FastAPI](https://fastapi.tiangolo.com/) interface.
+`Sagasu 2` is served in the following forms through a unified [FastAPI](https://fastapi.tiangolo.com/) interface.
+
+> ... FUA to edit this since no longer served live, also deprecate telegram bot due to authentication issues, state as a linked issue in a !WARNING above due to microsoft authentication redirect and add []()
 
 1. ***Live Telegram Bot*** [@sagasu2_bot](https://t.me/sagasu2_bot)
 2. ***Live Web App*** at [sagasu-two.vercel.app](https://sagasu-two.vercel.app/)
