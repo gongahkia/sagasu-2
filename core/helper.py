@@ -73,3 +73,11 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Cancel conversation"""
     await update.message.reply_text("Operation cancelled.")
     return ConversationHandler.END
+
+def validate_credentials(email: str, password: str) -> bool:
+    """Basic SMU credential validation"""
+    return "@smu.edu.sg" in email and len(password) >= 8
+
+def get_redis_connection():
+    """Get shared Redis connection"""
+    return redis.Redis.from_url(os.getenv("REDIS_URL"))
