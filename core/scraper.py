@@ -2,7 +2,7 @@
 
 import os
 import json
-import helper
+import core.helper as helper
 import itertools
 from dotenv import load_dotenv
 from dateutil.parser import parse

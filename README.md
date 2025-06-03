@@ -14,7 +14,7 @@
 ## Stack
 
 * *Frontend*: [Telegram Bot API](https://core.telegram.org/), [React](https://react.dev/), [Next.js](https://nextjs.org/)
-* *Backend*: [Python](https://www.python.org/)
+* *Backend*: [Python](https://www.python.org/), [FastAPI](https://fastapi.tiangolo.com/)
 * *Encryption*: ...
 
 ## Rationale

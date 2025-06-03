@@ -16,11 +16,11 @@ from telegram.ext import (
     filters
 )
 
-import helper
-from helper import (
+import core.helper as helper
+from core.helper import (
    format_date, 
 )
-from scraper import (
+from core.scraper import (
     scrape_smu_fbs,
     VALID_BUILDING,
     VALID_FLOOR,
