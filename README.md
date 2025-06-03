@@ -6,7 +6,7 @@
     <img src="./asset/logo/sagasu-2.png" width=55% height=55%>
 </p>
 
-`Sagasu 2` exists in the following forms.
+`Sagasu 2` exists in the following forms through a unified [FastAPI](https://fastapi.tiangolo.com/) interface.
 
 1. ***Live Telegram Bot*** [@sagasu2_bot](https://t.me/sagasu2_bot)
 2. ***Live Web App*** at [sagasu-two.vercel.app](https://sagasu-two.vercel.app/)
@@ -17,21 +17,12 @@
 
 ## Stack
 
-### Telegram Bot
-
-* *Frontend*: [Telegram Bot API](https://core.telegram.org/)
-* *Backend*: [Python](https://www.python.org/)
-* *Cache*: [Redis](https://redis.io/)
-* *Encryption*: ...
-* ...
-
-### Web App
-
-* *Frontend*: [React](https://react.dev/), [Next.js](https://nextjs.org/)
+* *Frontend*: [Telegram Bot API](https://core.telegram.org/), [React](https://react.dev/), [Next.js](https://nextjs.org/)
 * *Backend*: [Python](https://www.python.org/), [FastAPI](https://fastapi.tiangolo.com/)
 * *Cache*: [Redis](https://redis.io/)
 * *Package*: [Docker](https://www.docker.com/)
 * *Encryption*: ...
+* ...
 
 ## Architecture
 

@@ -2,8 +2,15 @@
 
 import os
 import json
+import redis
 import itertools
 from dotenv import load_dotenv
+from typing import Optional
+from core.models import UserCredentials
+
+# ----- REDIS CONFIGURATION -----
+
+_redis = None
 
 # ----- HELPER FUNCTIONS -----
 
@@ -47,3 +54,22 @@ async def send_large_message(context, chat_id, text):
     """Handle Telegram's message length limits"""
     for part in split_message(text):
         await context.bot.send_message(chat_id=chat_id, text=part)
+
+def init_redis(redis_url: str):
+    global _redis
+    _redis = redis.Redis.from_url(redis_url)
+
+async def get_redis_credentials(chat_id: int) -> Optional[UserCredentials]:
+    if not _redis:
+        return None
+    creds_json = _redis.get(f"creds:{chat_id}")
+    return UserCredentials(**json.loads(creds_json)) if creds_json else None
+
+async def store_credentials(chat_id: int, credentials: UserCredentials):
+    if _redis:
+        _redis.set(f"creds:{chat_id}", credentials.json())
+
+async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Cancel conversation"""
+    await update.message.reply_text("Operation cancelled.")
+    return ConversationHandler.END
