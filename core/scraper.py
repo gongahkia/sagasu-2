@@ -127,23 +127,32 @@ def split_bookings_by_day(bookings):
 def scrape_smu_fbs(base_url="https://fbs.intranet.smu.edu.sg/home", 
                   building_array=[], floor_array=[], 
                   facility_type_array=[], equipment_array=[],
-                  date_raw="", duration_hrs=2, start_time="00:00"):
+                  date_raw="", duration_hrs=2, start_time="00:00", room_capacity=5):
     """Robust scraper with proper error handling"""
     errors = []
     results = {}
-    
     try:
         credentials = helper.read_credentials()
         if not credentials or not credentials.get("username") or not credentials.get("password"):
             return {"errors": ["Invalid credentials configuration"]}
-
         date_formatted = helper.format_date(date_raw)
         if not date_formatted or "Invalid" in date_formatted:
             return {"errors": [f"Invalid date format: {date_raw}"]}
-
         end_time = calculate_end_time(VALID_TIME, start_time, duration_hrs)
-        room_capacity_formatted = convert_room_capacity(7)
-
+        room_capacity_formatted = convert_room_capacity(room_capacity)
+        print(f'''
+Scraping Configuration:
+- Base URL: {base_url}
+- Date: {date_formatted}
+- Start Time: {start_time}
+- End Time: {end_time}
+- Duration: {duration_hrs} hours
+- Room Capacity: {room_capacity_formatted}
+- Buildings: {', '.join(building_array)}
+- Floors: {', '.join(floor_array)}
+- Facility Types: {', '.join(facility_type_array)}
+- Equipment: {', '.join(equipment_array)}
+              ''')
         with sync_playwright() as p:
             browser = p.chromium.launch(
                 headless=True,  
@@ -162,6 +171,7 @@ def scrape_smu_fbs(base_url="https://fbs.intranet.smu.edu.sg/home",
                 max_retries = 3
                 for attempt in range(max_retries):
                     try:
+                        print(f"Loading {base_url} (attempt {attempt + 1}/{max_retries})")
                         page.goto(base_url, timeout=60000)
                         page.wait_for_selector("input[type='email']", state="visible", timeout=15000)
                         break
@@ -289,13 +299,14 @@ def scrape_smu_fbs(base_url="https://fbs.intranet.smu.edu.sg/home",
 
 if __name__ == "__main__":
     TARGET_URL = "https://fbs.intranet.smu.edu.sg/home"
-    BUILDING_ARRAY = ["Administration Building", "Li Ka Shing Library", "Li Ka Shing Library"]
-    FLOOR_ARRAY = ["Level 1", "Level 2"]
-    FACILITY_TYPE_ARRAY = ["Classroom"]
-    EQUIPMENT_ARRAY = ["Classroom PC"]
-    DATE_RAW="23 december 2024"
-    DURATION_HRS = 2.5
-    START_TIME = "14:00"
+    BUILDING_ARRAY = ["Yung Pung How School of Law/Kwa Geok Choo Law Library"]
+    FLOOR_ARRAY = ["Level 3", "Level 4"]
+    FACILITY_TYPE_ARRAY = ["Group Study Room"]
+    EQUIPMENT_ARRAY = ["TV Panel"]
+    DATE_RAW="7 June 2025"
+    DURATION_HRS = 3
+    START_TIME = "10:00"
+    ROOM_CAPACITY=3
     result = scrape_smu_fbs(
         base_url=TARGET_URL,
         building_array=BUILDING_ARRAY,
@@ -304,7 +315,8 @@ if __name__ == "__main__":
         equipment_array=EQUIPMENT_ARRAY,
         date_raw=DATE_RAW,
         duration_hrs=DURATION_HRS,
-        start_time=START_TIME
+        start_time=START_TIME,
+        room_capacity=ROOM_CAPACITY
     )
     if result.get("errors"):
         print("Errors occurred:")
