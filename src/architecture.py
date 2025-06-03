@@ -12,7 +12,7 @@ HEROKU_LOGO = "./heroku-logo.png"
 PLAYWRIGHT_LOGO = "./playwright-logo.png"
 
 def unified_architecture():
-    with Diagram("Sagasu2 Architecture", show=False, filename="unified_arch", direction="TB"):
+    with Diagram("Sagasu 2 Architecture", show=False, filename="unified_arch", direction="TB"):
         internet = Internet("SMU Intranet")
         with Cluster("Users"):
             mobile_user = Mobile("Telegram User")

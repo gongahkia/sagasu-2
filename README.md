@@ -15,7 +15,11 @@
 
 ## Rationale
 
-...
+[SMU's Facility Booking System](https://fbs.intranet.smu.edu.sg/home) isn't an inherently slow website. Booking facilities in itself is quick.  
+  
+However, the bloated UI and overly convaluted journey users must navigate through to search for available rooms gives off a sluggish impression.
+  
+`Sagasu 2` *(the sequel to [`Sagasu`](https://github.com/gongahkia/sagasu/))* is a Telegram Bot and Web App that scrapes SMU FBS per user-specified filters for available rooms, flagging any vacant facilities so users can quickly secure them on FBS.
 
 ## Stack
 
@@ -28,7 +32,7 @@
 
 ## Architecture
 
-Below diagram shows the [Telegram Bot](./telegram_bot/), [Web App](./web/frontend/) and [FastAPI Server](./web/backend/).
+Note the below diagram shows the [Telegram Bot](./telegram_bot/), [Web App](./web/frontend/) and [FastAPI Server](./web/backend/).
 
 ![](./asset/reference/architecture.png)
 
