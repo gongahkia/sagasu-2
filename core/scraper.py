@@ -276,10 +276,10 @@ def scrape_smu_fbs(base_url="https://fbs.intranet.smu.edu.sg/home", building_arr
 
 # ---- SAMPLE EXECUTION ----
 
-# if __name__ == "__main__":
-#     TARGET_URL = "https://fbs.intranet.smu.edu.sg/home"
-#     BUILDING_ARRAY = ["Administration Building", "Li Ka Shing Library", "Li Ka Shing Library"]
-#     FLOOR_ARRAY = ["Level 1", "Level 2"]
-#     FACILITY_TYPE_ARRAY = ["Classroom"]
-#     EQUIPMENT_ARRAY = ["Classroom PC"]
-#     print(f"errors: {scrape_smu_fbs(TARGET_URL, BUILDING_ARRAY, FLOOR_ARRAY, FACILITY_TYPE_ARRAY, EQUIPMENT_ARRAY)}")
+if __name__ == "__main__":
+    TARGET_URL = "https://fbs.intranet.smu.edu.sg/home"
+    BUILDING_ARRAY = ["Administration Building", "Li Ka Shing Library", "Li Ka Shing Library"]
+    FLOOR_ARRAY = ["Level 1", "Level 2"]
+    FACILITY_TYPE_ARRAY = ["Classroom"]
+    EQUIPMENT_ARRAY = ["Classroom PC"]
+    print(f"errors: {scrape_smu_fbs(TARGET_URL, BUILDING_ARRAY, FLOOR_ARRAY, FACILITY_TYPE_ARRAY, EQUIPMENT_ARRAY)}")
