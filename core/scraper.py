@@ -7,7 +7,7 @@ import itertools
 from dotenv import load_dotenv
 from dateutil.parser import parse
 from datetime import datetime, timedelta
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
 
 # ---- CONSTANTS ----
 
@@ -43,7 +43,7 @@ VALID_EQUIPMENT = [
 SCREENSHOT_FILEPATH = "./screenshot_log/"
 BOOKING_LOG_FILEPATH = "./booking_log/"
 
-# ---- HELPER FUNCTIONS ----
+# ---- IMPROVED HELPER FUNCTIONS ----
 
 def generate_30_min_intervals():
     """Generate all possible 30-minute intervals from 00:00 to 23:59"""
@@ -96,13 +96,18 @@ def convert_room_capacity(raw):
         return "MoreThan100Pax"
 
 def calculate_end_time(valid_times, start_time, duration_hrs):
-    """Calculate end time based on start time and duration"""
-    h, m = map(int, start_time.split(":"))
-    total_minutes = h * 60 + m + int(duration_hrs * 60)
-    end_h, end_m = divmod(total_minutes, 60)
-    end_time = f"{end_h % 24:02}:{end_m:02}"
-    closest = min(valid_times, key=lambda t: abs((int(t.split(":")[0]) * 60 + int(t.split(":")[1])) - (end_h * 60 + end_m)))
-    return [closest, end_time]
+    """Calculate end time with validation"""
+    try:
+        h, m = map(int, start_time.split(":"))
+        total_minutes = h * 60 + m + int(duration_hrs * 60)
+        end_h, end_m = divmod(total_minutes, 60)
+        end_time = f"{end_h % 24:02}:{end_m:02}"
+        return min(valid_times, key=lambda t: abs(
+            (int(t.split(":")[0])*60 + int(t.split(":")[1])) - 
+            (end_h*60 + end_m)
+        ))
+    except Exception as e:
+        raise ValueError(f"Invalid time calculation: {str(e)}")
 
 def split_bookings_by_day(bookings):
     """Split bookings list by day"""
@@ -117,100 +122,98 @@ def split_bookings_by_day(bookings):
                 current_day.append(booking)
     return days
 
-def scrape_smu_fbs(base_url="https://fbs.intranet.smu.edu.sg/home", building_array=[], floor_array=[], facility_type_array=[], equipment_array=[], date_raw="", duration_hrs=2, start_time="00:00"):
-    """Main Scraper Function to automate login and scrape SMU FBS booked timeslots for filtered rooms"""
+# ---- MAIN SCRAPER FUNCTION ----
+
+def scrape_smu_fbs(base_url="https://fbs.intranet.smu.edu.sg/home", 
+                  building_array=[], floor_array=[], 
+                  facility_type_array=[], equipment_array=[],
+                  date_raw="", duration_hrs=2, start_time="00:00"):
+    """Robust scraper with proper error handling"""
     errors = []
-    credentials = helper.read_credentials()
-    if not credentials:
-        return ["Missing credentials."]
-    if not date_raw:
-        return ["Missing date."]
-    date_formatted = helper.format_date(date_raw)
-    end_time = calculate_end_time(VALID_TIME, start_time, duration_hrs)[0]
-    room_capacity_formatted = convert_room_capacity(7)
+    results = {}
+    
     try:
+        credentials = helper.read_credentials()
+        if not credentials or not credentials.get("username") or not credentials.get("password"):
+            return {"errors": ["Invalid credentials configuration"]}
+
+        date_formatted = helper.format_date(date_raw)
+        if not date_formatted or "Invalid" in date_formatted:
+            return {"errors": [f"Invalid date format: {date_raw}"]}
+
+        end_time = calculate_end_time(VALID_TIME, start_time, duration_hrs)
+        room_capacity_formatted = convert_room_capacity(7)
+
         with sync_playwright() as p:
-            # browser = p.chromium.launch(headless=False, slow_mo=1000)
             browser = p.chromium.launch(
-                headless=False,
-                slow_mo=1000,
+                headless=True,  
                 args=[
                     '--no-sandbox',
                     '--disable-gpu',
+                    '--single-process',
                     '--disable-dev-shm-usage'
-                ]
+                ],
+                timeout=60000
             )
-            page = browser.new_page()
+            
             try:
-                page.goto(base_url)
-                page.wait_for_selector("input[type='email']")
-                page.wait_for_selector("input[type='password']")
-                page.wait_for_selector("span#submitButton")
-                print(f"Navigating to {base_url}")
+                context = browser.new_context()
+                page = context.new_page()
+                max_retries = 3
+                for attempt in range(max_retries):
+                    try:
+                        page.goto(base_url, timeout=60000)
+                        page.wait_for_selector("input[type='email']", state="visible", timeout=15000)
+                        break
+                    except PlaywrightTimeoutError:
+                        if attempt == max_retries - 1:
+                            raise
+                        page.reload()
                 page.fill("input[type='email']", credentials["username"])
                 page.fill("input[type='password']", credentials["password"])
                 page.click("span#submitButton")
-                page.wait_for_timeout(6000)
-                page.wait_for_load_state("networkidle")
-                frame = page.frame(name="frameBottom")
-                if not frame:
-                    errors.append("Frame 'frameBottom' not found.")
-                    return errors
+                try:
+                    page.wait_for_selector(".dashboard", timeout=30000)  
+                except PlaywrightTimeoutError:
+                    return {"errors": ["Login failed - check credentials"]}
                 frame = page.frame(name="frameContent")
-                while True:
-                    current_date = frame.query_selector("input#DateBookingFrom_c1_textDate").get_attribute("value")
+                if not frame:
+                    return {"errors": ["Failed to load booking interface frame"]}
+                date_selector = "input#DateBookingFrom_c1_textDate"
+                for _ in range(30):  
+                    current_date = frame.input_value(date_selector)
                     if current_date == date_formatted:
-                        print(f"Final day is {current_date}")
                         break
-                    print(f"Current day is {current_date}, navigating to the next day...")
                     frame.click("a#BtnDpcNext.btn")
-                    frame.wait_for_timeout(1500)
-                frame.evaluate(f'document.querySelector("select#TimeFrom_c1_ctl04").value = "{start_time}"')
-                print(f"Selected start time: {start_time}")
-                frame.evaluate(f'document.querySelector("select#TimeTo_c1_ctl04").value = "{end_time}"')
-                print(f"Selected end time: {end_time}")
-                frame.wait_for_timeout(3000)
+                    frame.wait_for_function(
+                        f'document.querySelector("{date_selector}").value !== "{current_date}"',
+                        timeout=5000
+                    )
+                else:
+                    return {"errors": ["Date navigation failed"]}
+                frame.select_option("select#TimeFrom_c1_ctl04", start_time)
+                frame.select_option("select#TimeTo_c1_ctl04", end_time)
 
-                def select_multi_dropdown(selector, values):
-                    if frame.is_visible(selector):
-                        frame.click(selector)
-                        for val in values:
-                            frame.click(f'text="{val}"')
-                            print(f"Selecting {val}...")
-                        frame.evaluate("popup.hide()")
-                        page.wait_for_load_state("networkidle")
-                        frame.wait_for_timeout(3000)
+                def apply_filter(selector, values):
+                    if not values:
+                        return
+                    frame.click(selector)
+                    for val in values:
+                        frame.click(f'text="{val}"', timeout=5000)
+                    frame.click(selector)  
 
-                select_multi_dropdown("#DropMultiBuildingList_c1_textItem", building_array)
-                select_multi_dropdown("#DropMultiFloorList_c1_textItem", floor_array)
-                select_multi_dropdown("#DropMultiFacilityTypeList_c1_textItem", facility_type_array)
-                select_multi_dropdown("#DropMultiEquipmentList_c1_textItem", equipment_array)
-
-                frame.evaluate(f'document.querySelector("select#DropCapacity_c1").value = "{room_capacity_formatted}"')
-                print(f"Selected room capacity: {room_capacity_formatted}")
-                frame.wait_for_timeout(3000)
-
-                page.screenshot(path=f"{SCREENSHOT_FILEPATH}0.png")
-
-                frame.wait_for_selector("table#GridResults_gv")
-                rows = frame.query_selector_all("table#GridResults_gv tbody tr")
-                matching_rooms = [
-                    row.query_selector_all("td")[1].inner_text().strip()
-                    for row in rows if len(row.query_selector_all("td")) > 1
-                ]
-                if not matching_rooms:
-                    print("No rooms fitting description found.")
-                    return errors
-
-                print(f"{len(matching_rooms)} rooms fitting description found.")
-                for room in matching_rooms:
-                    print(f"- {room}")
+                apply_filter("#DropMultiBuildingList_c1_textItem", building_array)
+                apply_filter("#DropMultiFloorList_c1_textItem", floor_array)
+                apply_filter("#DropMultiFacilityTypeList_c1_textItem", facility_type_array)
+                apply_filter("#DropMultiEquipmentList_c1_textItem", equipment_array)
+                frame.select_option("select#DropCapacity_c1", room_capacity_formatted)
 
                 frame.click("a#CheckAvailability")
-                print("Submitting search availability request...")
-                page.wait_for_load_state("networkidle")
-                page.wait_for_timeout(6000)
-                page.screenshot(path=f"{SCREENSHOT_FILEPATH}1.png")
+                frame.wait_for_selector("table#GridResults_gv", timeout=30000)
+
+                rooms = frame.query_selector_all("table#GridResults_gv tbody tr td:nth-child(2)")
+                if not rooms:
+                    return {"errors": ["No rooms found with current filters"]}
 
                 frame = page.frame(name="frameBottom")
                 frame = page.frame(name="frameContent")
@@ -270,17 +273,17 @@ def scrape_smu_fbs(base_url="https://fbs.intranet.smu.edu.sg/home", building_arr
                 helper.pretty_print_json(final_booking_log)
                 helper.write_json(final_booking_log, f"{BOOKING_LOG_FILEPATH}scraped_log.json")
 
-            except Exception as e:
-                errors.append(f"Error processing {base_url}: {e}")
+                return {
+                    "results": results,
+                    "errors": errors
+                }
 
             finally:
-                print("Closing browser...")
+                context.close()
                 browser.close()
 
     except Exception as e:
-        errors.append(f"Failed to initialize Playwright: {e}")
-
-    return errors
+        return {"errors": [f"Scraping failed: {str(e)}"]}
 
 # ---- SAMPLE EXECUTION ----
 
@@ -293,4 +296,20 @@ if __name__ == "__main__":
     DATE_RAW="23 december 2024"
     DURATION_HRS = 2.5
     START_TIME = "14:00"
-    print(f"errors: {scrape_smu_fbs(TARGET_URL, BUILDING_ARRAY, FLOOR_ARRAY, FACILITY_TYPE_ARRAY, EQUIPMENT_ARRAY, DATE_RAW, DURATION_HRS, START_TIME)}")
+    result = scrape_smu_fbs(
+        base_url=TARGET_URL,
+        building_array=BUILDING_ARRAY,
+        floor_array=FLOOR_ARRAY,
+        facility_type_array=FACILITY_TYPE_ARRAY,
+        equipment_array=EQUIPMENT_ARRAY,
+        date_raw=DATE_RAW,
+        duration_hrs=DURATION_HRS,
+        start_time=START_TIME
+    )
+    if result.get("errors"):
+        print("Errors occurred:")
+        for error in result["errors"]:
+            print(f"- {error}")
+    else:
+        print(f"Success! Found {len(result['results'])} rooms")
+        helper.write_json(result, "scraped_results.json")
