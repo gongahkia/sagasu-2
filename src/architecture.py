@@ -7,57 +7,42 @@ from diagrams.onprem.network import Internet, Nginx
 from diagrams.onprem.queue import Celery
 from diagrams.generic.device import Mobile
 
-def telegram_architecture():
-    with Diagram("Sagasu2 Telegram Bot Architecture", show=False, filename="telegram_arch", direction="TB"):
-        user = Mobile("Telegram User")
+def unified_architecture():
+    with Diagram("Sagasu2 Unified Architecture", show=False, filename="unified_arch", direction="LR"):
+        internet = Internet("SMU Intranet")
         
-        with Cluster("Telegram Bot Service (Hosted on Heroku)"):
-            bot = Python("Bot Handler\n(bot.py)")
-            handlers = Python("Command Handlers\n(start, settings, scrape)")
-            redis = Redis("Redis\nCredentials Storage")
-            celery = Celery("Task Queue\n(scraper_service)")
-            playwright = Docker("Playwright\nBrowser Instance")
+        with Cluster("Telegram Bot Service (Heroku)"):
+            mobile_user = Mobile("Telegram User")
+            bot = Python("Bot Handler")
+            telegram_redis = Redis("Credentials Storage")
+            bot >> Edge(label="/start") << mobile_user
+            bot >> Edge(label="Store/fetch") >> telegram_redis
 
-        # Flows
-        user >> Edge(label="/start") >> bot
-        bot >> Edge(label="Store credentials") >> redis
-        bot >> Edge(label="Trigger scrape_task.delay()") >> celery
-        celery >> Edge(label="Execute scrape_smu_fbs()") >> playwright
-        playwright >> Edge(label="SMU FBS API calls", color="firebrick") >> Internet("SMU Intranet")
-        playwright >> Edge(label="Write results") >> redis
-        redis >> Edge(label="Poll task status") >> bot
-        bot >> Edge(label="Send formatted results") >> user
-
-def react_architecture():
-    with Diagram("Sagasu2 React Frontend Architecture", show=False, filename="react_arch", direction="LR"):
-        user = User("Web User")
-        
-        with Cluster("Frontend Service (React Frontend Hosted on Vercel)"):
-            react = TypeScript("React App\n(Next.js)")
+        with Cluster("React Frontend (Vercel)"):
+            web_user = User("Web User")
+            react = TypeScript("Next.js App")
             nginx = Nginx("Static Server")
-        
-        with Cluster("Backend Service (Hosted on AWS EC2)"):
-            api = Python("FastAPI\n(main.py)")
-            redis = Redis("Shared Redis\n(Session Storage)")
-            celery = Celery("Celery Worker\n(scraper_service)")
-            playwright = Docker("Playwright\nBrowser Instance")
+            web_user >> Edge(label="HTTP") >> nginx >> react
 
-        with Cluster("Browser"):
-            browser = Docker("User Browser")
-            websocket = Docker("WebSocket\nConnection")
+        with Cluster("Backend Services (AWS EC2)"):
+            api = Python("FastAPI")
+            shared_redis = Redis("Shared Session Storage")
+            celery = Celery("Celery Workers")
+            playwright = Docker("Playwright")
 
-        # Flows
-        user >> Edge(label="HTTP Requests") >> nginx
-        nginx >> Edge(label="Static Assets") << react
-        react >> Edge(label="API Calls\n(Axios)") >> api
-        api >> Edge(label="JWT Auth") >> redis
-        api >> Edge(label="Trigger scrape_task.delay()") >> celery
-        celery >> Edge(label="Execute scrape_smu_fbs()") >> playwright
-        playwright >> Edge(label="SMU FBS API calls", color="firebrick") >> Internet("SMU Intranet")
-        playwright >> Edge(label="Write results") >> redis
-        redis >> Edge(label="Poll /tasks/{id}") << api
-        api >> Edge(label="SSE Updates") >> websocket >> react
+            # Shared components
+            api - Edge(style="dashed") - shared_redis
+            celery - Edge(style="dashed") - playwright
+            playwright >> Edge(label="SMU API", color="firebrick") >> internet
+
+        # Cross-service connections
+        bot >> Edge(label="Trigger task") >> celery
+        react >> Edge(label="API calls") >> api
+        api >> Edge(label="Queue task") >> celery
+        celery >> Edge(label="Write results") >> shared_redis
+        shared_redis >> Edge(label="Poll status") << [bot, api]
+        api >> Edge(label="SSE/WS") >> react
+        bot >> Edge(label="Send results") >> mobile_user
 
 if __name__ == "__main__":
-    telegram_architecture()
-    react_architecture()
+    unified_architecture()
