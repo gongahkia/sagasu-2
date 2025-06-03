@@ -11,13 +11,33 @@
 1. ***Live Telegram Bot*** [@sagasu2_bot](https://t.me/sagasu2_bot)
 2. ***Live Web App*** at [sagasu-two.vercel.app](https://sagasu-two.vercel.app/)
 
+## Rationale
+
+...
+
 ## Stack
 
-* *Frontend*: [Telegram Bot API](https://core.telegram.org/), [React](https://react.dev/), [Next.js](https://nextjs.org/)
+### Telegram Bot
+
+* *Frontend*: [Telegram Bot API](https://core.telegram.org/)
+* *Backend*: [Python](https://www.python.org/)
+* *Encryption*: ...
+* ...
+
+### Web App
+
+* *Frontend*: [React](https://react.dev/), [Next.js](https://nextjs.org/)
 * *Backend*: [Python](https://www.python.org/), [FastAPI](https://fastapi.tiangolo.com/)
 * *Encryption*: ...
+* ...
 
-## Rationale
+## Architecture
+
+### [Telegram Bot](./telegram_bot/)
+
+...
+
+### [Web App](./web/)
 
 ...
 
@@ -42,16 +62,6 @@ SMU_FBS_PASSWORD=XXX
 ```
 
 3. Then run `make start`.
-
-## Architecture
-
-### [Telegram Bot](./src)
-
-...
-
-### [Web App](./sagasu2-app)
-
-...
 
 ## Other notes
 
